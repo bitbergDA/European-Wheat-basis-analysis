@@ -120,5 +120,18 @@ Here, y is the local farmgate price, X is the MATIF price, and d stands for the 
 #### Results
 Okay, so for the long run model, the $$\beta_1$$ coefficent corresponds to 0.89, meaning that if there is a 1 Euro increase in MATIF a month, there is also a 0.89 increase in farmgate prices. Differently expressed, the average basis between the European countries is at around 11% (1-0.89). But this is in no way weighted on quantity etc, so it is therefore more useful to explain this basis as within country mean basis, which is done in the map below:
 
+<img src="src/output/alpha_map_MATIF_long_run.png" alt="Long-run Basis" width="800">
+
+What we can see here is that France has a virtuly a 0% long-run basis to MATIF, which is expected since MATIF is located in France, but neighbouring country Germany has also a very low  long-run basis. On the other hand, Romania and Bulgaria has quite a great basis against MATIF. For Romania it is around 34%, and for Bulgaria lies around 30%. 
+
+For the short run dynamics, and speed of adjustments the story is quite similar as can be shown by the map below:
+
+<img src="src/output/alpha_map_MATIF.png" alt="Long-run Basis" width="800">
+
+Here again, we can see that France adjust almost immediatly any basis that occurs on a monthly basis, where the speed of adjustment is virtually 0. Again, it is also quite high for Germany, thirdly in revision speed lies Sweden. Meaning that these countries corrects deviation from their long run basis quite fast. At the bottom end we then see Bulgaria and Romania again, correcting only 15% of any deviation from their long run basis in the first month on average.
+
+## Discussion
+
+
 ## Conclusion
 While the model has some limitations, the results suggest that European countries on average correct for spatial disequilibriums at a rate of about 29%, this rate does however vary extensly depending on geographical area. Where countries like Estonia seem to adjust very quickly to spatial disequilibriums, while countries like Bulgaria adjusts slower. This project does not at this point go into detail on what the cause of disequilibriums where, and if this would change the speed of adjustment. For this is a problem more apporpriatly addressed by a new project. 
