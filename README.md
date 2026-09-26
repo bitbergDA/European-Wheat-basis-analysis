@@ -105,11 +105,13 @@ Here again, we use the same price data as in analysis one, but we do not have a 
 An error correction model is used here as well, but for a slighly different reason. The dependent variable in this case is the farmgate price for breadmaking wheat in a specific country, and the independent variable is the MATIF price, none of which are I(0) on its own, but both are cointegrated so therefore a ECM is apporpriate here as well constructed in this fashion.
 
 Long run model:
+
 $$
 y_{i,t} = \beta_0 + \beta_1 X_{i,t} + 0\theta fixed effects_i + \mu_{i,t}
 $$
 
 Short run model:
+
 $$
 dy_{i,t} = \beta_0 + \beta_1 \mu_{i,t-1} + \beta_2 dX_{i,t-1} + \beta_3 dX_{i,t-1} +\theta Fixed effects_i + \theta War in Ukraine_t + \epsilon_{i,t}
 $$
