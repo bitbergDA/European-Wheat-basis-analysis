@@ -128,12 +128,18 @@ What we can see here is that France has a virtuly a 0% long-run basis to MATIF, 
 
 For the short run dynamics, and speed of adjustments the story is quite similar as can be shown by the map below:
 
-<img src="src/output/alpha_map_MATIF.png" alt="Long-run Basis" width="800">
+<img src="src/output/alpha_map_MATIF.png" alt="Short-run Basis" width="800">
 
 Here again, we can see that France adjust almost immediatly any basis that occurs on a monthly basis, where the speed of adjustment is virtually 0. Again, it is also quite high for Germany, thirdly in revision speed lies Sweden. Meaning that these countries corrects deviation from their long run basis quite fast. At the bottom end we then see Bulgaria and Romania again, correcting only 15% of any deviation from their long run basis in the first month on average.
 
 ## Discussion
+I will start the discussion by talking about the spatial dependence of the basis, to then move on to how the basis seem to behave in different countries, and lastly I will make a discussion among the two.
 
+So the revision speed of different countries wheat basis when it comes to its neighbours basis seem relatively high in market such as Swedens and Estonia, while it is almost non existent in places like Germany. 
+The reason behind this is a bit hard to untangle when using spatial weight matrixes, since they work almost like black boxes which is a disadvantage. But from backtesting the results seems to be consisten, and is not sensitive to wheather one uses exports or imports do denote flow. When running seperate regression for each country, the long run relationship for Germany does not stand out either, and there appears to be quite alot of explanatory value in its neighbours basis. The big reason for Germanys incencitive may therefore be genuine and perhaps explained by Germany being a big price setter, and not a settler. Its Europes secound biggest producer of wheat, and has connections to the Danube which may place it in a unique situation. This is supported by the fact that Germany does still hold a long-run equilibrium in wheat basis with its neighbours, meaning that any price adjustment in the short term almost always comes from its neighbours. Neither France, Spain, or Italy either adjust very quickly, but arent as slow as Germany.
+
+
+Looking at how the basis behaves in the long and short term, the picture becomes a bit clearer. Countries relative to eachother appears to behave quite similar in short run adjustments as in long term-equilibrium of their basis. Where countries such as Germany and France move quite in sync with the MATIF, and their long-run hedging ratio is almost 1:1. While in general, the further away geograpihcally one moves from the MATIF settlement point in France, the weaker the long-run relationship becomes. This is completely in line with the law of one price, since the higher the transportation cost between markets, the more different prices are allowed to get. On a short-run basis this also holds true, any basis seems to be clearly much faster corrected, if the country is geograhpically closer to MATIF, meaning that if the basis where to increase, it will very fast decrease again, and almost correct itself directly in France. 
 
 ## Conclusion
-While the model has some limitations, the results suggest that European countries on average correct for spatial disequilibriums at a rate of about 29%, this rate does however vary extensly depending on geographical area. Where countries like Estonia seem to adjust very quickly to spatial disequilibriums, while countries like Bulgaria adjusts slower. This project does not at this point go into detail on what the cause of disequilibriums where, and if this would change the speed of adjustment. For this is a problem more apporpriatly addressed by a new project. 
+While the first model has some limitations, especailly in regards to the use of spatial weight matrixes which creates black box phenomenas. The findings are a good starting point in analysing how fast 
