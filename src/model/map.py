@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 # --- Configuration -----------------------------------------------------------
-RESULTS_FILE = r'..\..\data\processed\results.csv'
+RESULTS_FILE = r"..\..\data\processed\results_panel_fe.csv"
 
 COUNTRY_INFO = {
     "AT": ("Austria", "AUT"), "BE": ("Belgium", "BEL"), "BG": ("Bulgaria", "BGR"),
@@ -45,11 +45,11 @@ def make_map(map_df: pd.DataFrame, out_prefix: str = "alpha_map"):
         color="alpha",
         hover_name="country",
         hover_data={"iso3": False, "alpha": ":.3f"},
-        color_continuous_scale="RdYlGn_r",   # red = slow, green = fast
+        color_continuous_scale="RdYlGn",   # red = slow, green = fast
         range_color=(mean_alpha - max_dev, mean_alpha + max_dev),
         color_continuous_midpoint=mean_alpha,
         scope="europe",
-        title="Spatial ECM reversion speed (alpha) by country",
+        title="Co movement of basis between neighbours and current.",
         labels={"alpha": "alpha (ECT_lag1)"},
     )
     fig.update_geos(
@@ -74,3 +74,4 @@ if __name__ == "__main__":
     map_df = build_map_df(alpha_df)
     print(map_df.sort_values("alpha"))
     make_map(map_df)
+
