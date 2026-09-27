@@ -45,7 +45,7 @@ For this analysis I use data from Eurostat for country-specific wheat prices goi
 
 To avoid confusing global macro price events with regional deviations in wheat prices, I extract the MATIF price component from local farm-gate prices, which simultaneously defines the basis — the "local" part of a country's price movement, once the global price component has been removed.
 
-To then establish the relationship between countries, I construct a gravity-fitted spatial weight matrix, regressing trade flow on geographical distance and whether two countries share a navigable river, specifically to avoid the endogeneity problems that come from using realized trade flow directly. These geographic factors explain trade flow well *[insert pseudo-R² / fit statistic here]*, and the fitted friction coefficients are robust to whether export or import flow is used to fit them — though this robustness is about the geographic friction structure specifically, not a claim that trade between any given pair of countries is symmetric. Realized trade volumes are frequently asymmetric (see Discussion, and the Bulgaria case in particular).
+To then establish the relationship between countries, I construct a gravity-fitted spatial weight matrix, regressing trade flow on geographical distance and whether two countries share a navigable river, specifically to avoid the endogeneity problems that come from using realized trade flow directly. These geographic factors explain trade flow well and got a pseudo $$R^2$$result of 0.97, and the fitted friction coefficients are robust to whether export or import flow is used to fit them — though this robustness is about the geographic friction structure specifically, not a claim that trade between any given pair of countries is symmetric. Realized trade volumes are frequently asymmetric (see Discussion, and the Bulgaria case in particular).
 
 Since the analysis here is monthly, all reported speed-of-adjustment figures — both in this model and in the temporal model below — should be read as "share of deviation corrected per month," not per week or per day. This matters for how fast a given coefficient should be interpreted as being in practical, storage-decision terms.
 
@@ -63,7 +63,7 @@ where $y$ is the basis, $W$ is the gravity-fitted spatial weight matrix, $\theta
 
 ### Results
 
-The pooled $\beta_1$ is estimated at 0.945, which makes intuitive sense: it states that if the spatially-weighted basis of a country's neighbourhood moves by 1 euro, that country's own basis moves by roughly 0.94 euro in the same period. The coefficient is highly significant, with a 95% confidence interval of [0.80, 1.08]. Co-movement with neighbours is, on average, strong. *[A formal poolability test — insert F-statistic / p-value here — indicates whether this single pooled coefficient is a good summary of the panel or whether the country-level results below should be treated as primary.]*
+The pooled $\beta_1$ is estimated at 0.945, which makes intuitive sense: it states that if the spatially-weighted basis of a country's neighbourhood moves by 1 euro, that country's own basis moves by roughly 0.94 euro in the same period. The coefficient is highly significant, with a 95% confidence interval of [0.80, 1.08]. Co-movement with neighbours is, on average, strong. A poolability test between the countries was made and came back sucessfull with a p-value of 0.00, and a F-statistic of 107.84. 
 
 I also estimated $\beta_1$ separately for each country, shown in the map below:
 
@@ -136,3 +136,19 @@ This distinction is still practically useful even in its current, hypothesis-sta
 ## Conclusion
 
 Different European wheat markets and their corresponding basis appear to fall into different categories: some tied closely to MATIF, others tied more closely to their neighbouring markets. There may be a structural trade-off here — long-standing systems and contract relationships that shape how basis moves differently depending on a country's geographic proximity to MATIF — which partly ties back to the law of one price. The spatial pattern is also consistent with the gravity-based structure used to build the spatial weight matrix: many countries appear to gravitate toward a shared centroid (MATIF) in terms of basis movement, but as that gravitational pull weakens with distance, countries appear to gravitate more toward their neighbours instead, producing the geographic pattern observed above. Overall, most countries appear at least somewhat tied to both MATIF and their neighbours, even as the balance between the two differs meaningfully by country — though, as noted above, disentangling how much of that balance is a real economic trade-off versus an artifact of how basis was constructed remains the key open question for this analysis.
+
+
+
+---
+
+# Repository Structure
+
+```text
+├── data/
+│   ├── raw/ <- In here i put the raw data, for wheat prices locally which can be found here (https://agridata.ec.europa.eu/extensions/DashboardPrice/DashboardMarketPrices.html#), and closet rolling future MATIF prices.
+│   └── processed/ <- All processed data got saved here
+├── src/
+│   ├── forecasted_input/ <- I used this to handle the data, allign it, but also retrive flow data from API's
+│   ├── model/ <- this is where the different models where used, as well as maps constructed       
+│   ├── output/ <- here is where the maps where saved.
+└── README.md
