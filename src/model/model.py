@@ -2,9 +2,6 @@ import pandas as pd
 import scipy.sparse as spar
 from linearmodels.panel import PanelOLS
 from statsmodels.tsa.stattools import adfuller
-import numpy as np
-from scipy.stats import spearmanr
-from statsmodels.stats.diagnostic import acorr_breusch_godfrey
 
 W = pd.read_csv(r"../../data/processed/W_gravity.csv")
 W = W.set_index("reporter")
@@ -50,87 +47,55 @@ df["ukraine_dummy"] = (
     (df.index.get_level_values("time") < pd.Timestamp("2022-03-01"))
 ).astype(int)
 
-# Spatial Error-Correction Model (SpECM)
-N_OWN_LAGS = 2
 MIN_OBS_ADF = 60
 ADF_ALPHA = 0.05
 
-# Step 1: long-run cointegrating regression
-coint_model = PanelOLS(df['Y'], df[['X']], entity_effects=True)
-coint_res = coint_model.fit(cov_type='clustered', cluster_entity=True)
-print(coint_res)
-df['ECT'] = coint_res.resids
+USE_LAG = False
 
-# Stationarity check
-print("\nADF test on ECT by country:")
+print("\nADF test on Y directly, by country:")
 stationary_countries = []
 for entity in df.index.get_level_values('entity').unique():
-    e = df['ECT'].xs(entity, level='entity').dropna()
-    if len(e) < MIN_OBS_ADF:
-        print(f"  {entity}: only {len(e)} obs, skipping")
+    y = df['Y'].xs(entity, level='entity').dropna()
+    if len(y) < MIN_OBS_ADF:
+        print(f"  {entity}: only {len(y)} obs, skipping")
         continue
-    stat, pval, *_ = adfuller(e, autolag='AIC')
+    stat, pval, *_ = adfuller(y, autolag='AIC')
     stationary = pval < ADF_ALPHA
     if stationary:
         stationary_countries.append(entity)
     print(f"  {entity}: ADF stat={stat:.3f}  p={pval:.4f}  "
           f"[{'STATIONARY' if stationary else 'non-stationary'}]")
 
-n_entities = df.index.get_level_values('entity').nunique()
-
-
-# Step 2: dynamic ECM
-g = df.groupby(level='entity')
-df['dY'] = g['Y'].diff()
-df['dX'] = g['X'].diff()
-df['ECT_lag1'] = g['ECT'].shift(1)
-df['dX_lag1'] = g['dX'].shift(1)
-for k in range(1, N_OWN_LAGS + 1):
-    df[f'dY_lag{k}'] = g['dY'].shift(k)
-
-lag_cols = ['ECT_lag1', 'dX_lag1'] + [f'dY_lag{k}' for k in range(1, N_OWN_LAGS + 1)]
-ecm_df = df.dropna(subset=['dY'] + lag_cols + ['ukraine_dummy'])
-
-ecm_model = PanelOLS(ecm_df['dY'], ecm_df[lag_cols + ["ukraine_dummy"]], entity_effects=True)
-ecm_res = ecm_model.fit(cov_type='clustered', cluster_entity=True)
-print(ecm_res)
-
-
-alpha = ecm_res.params['ECT_lag1']
-print(f"\nPooled alpha = {alpha:.4f}  (p={ecm_res.pvalues['ECT_lag1']:.4f})")
-if -1 < alpha < 0:
-    print(f"Implied half-life: {np.log(0.5) / np.log(1 + alpha):.1f} periods")
+if USE_LAG:
+    df['X_used'] = df.groupby(level='entity')['X'].shift(1)
 else:
-    print("alpha outside the stable (-1, 0) range -- no valid half-life; "
-          "check sign/magnitude before treating this as mean reversion.")
+    df['X_used'] = df['X']
 
+model_df = df.dropna(subset=['Y', 'X_used', 'ukraine_dummy'])
 
-# Optional: heterogeneous alpha per country
-entity_dummies = pd.get_dummies(ecm_df.index.get_level_values('entity'), prefix='ECT')
-entity_dummies.index = ecm_df.index
-ect_interacted = entity_dummies.multiply(ecm_df['ECT_lag1'], axis=0).astype(float)
+# --- pooled panel FE model
+pooled_model = PanelOLS(model_df['Y'], model_df[['X_used', 'ukraine_dummy']],
+                        entity_effects=True)
+pooled_res = pooled_model.fit(cov_type='clustered', cluster_entity=True)
+print(pooled_res)
+print(f"\npooled beta = {pooled_res.params['X_used']:.4f}  "
+      f"(p={pooled_res.pvalues['X_used']:.4f})")
 
-other_cols = ['dX_lag1'] + [f'dY_lag{k}' for k in range(1, N_OWN_LAGS + 1)]
-het_exog = pd.concat([ect_interacted, ecm_df[other_cols]], axis=1)
-het_model = PanelOLS(ecm_df['dY'], het_exog, entity_effects=True)
+# --- country-specific beta 
+entity_dummies = pd.get_dummies(model_df.index.get_level_values('entity'), prefix='ENT')
+entity_dummies.index = model_df.index
+x_interacted = entity_dummies.multiply(model_df['X_used'], axis=0).astype(float)
+
+het_exog = pd.concat([x_interacted, model_df[['ukraine_dummy']]], axis=1)
+het_model = PanelOLS(model_df['Y'], het_exog, entity_effects=True)
 het_res = het_model.fit(cov_type='clustered', cluster_entity=True)
+print(het_res)
 
-print("\nHeterogeneous alpha per country:")
-alpha_by_country = het_res.params.filter(like='ECT_')
-alpha_by_country.index = alpha_by_country.index.str.replace('ECT_', '')
-print(alpha_by_country.sort_values())
+beta_by_country = het_res.params.filter(like='ENT_')
+beta_by_country.index = beta_by_country.index.str.replace('ENT_', '').str.replace('_X_used', '')
+beta_by_country = beta_by_country.sort_values()
 
-# Save alpha per coutry
+print("\nCountry-specific beta:")
+print(beta_by_country)
 
-results = alpha_by_country.sort_values()
-results.to_csv(r'..\..\data\processed\results.csv')
-
-# Save 2 countries for new project, in order to demonstrate how this knowledge can be useful
-valda_entities = ['SE', 'FR']
-vald_kolumn = 'ECT_lag1'
-
-# Filter
-nytt_df = df.loc[df.index.get_level_values('entity').isin(valda_entities), [vald_kolumn]]
-
-# Save
-nytt_df.to_csv(r'..\..\data\processed\filtrerad_data.csv')
+beta_by_country.to_csv(r"..\..\data\processed\results_panel_fe.csv")
