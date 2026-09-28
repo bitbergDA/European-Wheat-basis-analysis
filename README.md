@@ -41,7 +41,7 @@ In reality, of course, you have a web of countries with different supply and dem
 
 ### Data
 
-For this analysis I use data from Eurostat for country-specific wheat prices going back to January 2005, expressed monthly and in euros, together with trade flows of wheat between European countries over the same period.
+For this analysis I use data from Eurostat for country-specific wheat prices going back to January 2005, expressed monthly and in euros, together with trade flows of wheat between European countries over the same period. This data had missing values however, so I therefore filled a small amount in with previous results, and also decided to not include 3 countries from the dataset.
 
 To avoid confusing global macro price events with regional deviations in wheat prices, I extract the MATIF price component from local prices, which simultaneously defines the basis, the "local" part of a country's price movement, once the global price component has been removed.
 
@@ -145,7 +145,7 @@ Different European wheat markets and their corresponding basis appear to fall in
 
 ```text
 ├── data/
-│   ├── raw/ <- In here i put the raw data, for wheat prices locally which can be found here (https://agridata.ec.europa.eu/extensions/DashboardPrice/DashboardMarketPrices.html#), and closet rolling future MATIF prices.
+│   ├── raw/ <- In here i put the raw data, for wheat prices locally which can be found here (https://agridata.ec.europa.eu/extensions/DashboardPrice/DashboardMarketPrices.html#), and closet rolling future MATIF prices from Investor.com .
 │   └── processed/ <- All processed data got saved here
 ├── src/
 │   ├── forecasted_input/ <- I used this to handle the data, allign it, but also retrive flow data from API's
