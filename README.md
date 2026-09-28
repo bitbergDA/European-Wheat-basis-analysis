@@ -41,7 +41,7 @@ In reality, of course, you have a web of countries with different supply and dem
 
 ### Data
 
-For this analysis I use data from the [European Commisions Agri-food data portal](https://agridata.ec.europa.eu/extensions/DashboardPrice/DashboardMarketPrices.html) for country-specific wheat prices going back to January 2005, expressed monthly and in euros, together with trade flows of wheat between European countries over the same period which i retrive from Eurostats. This data had missing values however, so I therefore filled a small amount in with previous results, and also decided to not include 3 countries from the dataset.
+For this analysis I use data from the [European Commisions Agri-food data portal](https://agridata.ec.europa.eu/extensions/DashboardPrice/DashboardMarketPrices.html) for country-specific wheat prices going back to January 2005, expressed monthly and in euros, together with trade flows of wheat between European countries over the same period which i retrive from [European Data portal](https://data.europa.eu/data/datasets/vt5w0kors8bqhl2kizqga?locale=en). This data had missing values however, so I therefore filled a small amount in with previous results, and also decided to not include 3 countries from the dataset.
 
 To avoid confusing global macro price events with regional deviations in wheat prices, I extract the MATIF price component from local prices, which simultaneously defines the basis, the "local" part of a country's price movement, once the global price component has been removed. MATIF price data which I get from [Investor.com](https://www.investing.com/commodities/milling-wheat-n2-historical-data), and is defined as the rolling future price of MATIF data
 
