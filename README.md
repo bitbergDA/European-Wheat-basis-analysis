@@ -146,7 +146,7 @@ Different European wheat markets and their corresponding basis appear to fall in
 
 ```text
 ├── data/
-│   ├── raw/ <- In here i put the raw data, for wheat prices locally which can be found here (https://agridata.ec.europa.eu/extensions/DashboardPrice/DashboardMarketPrices.html#), and closet rolling future MATIF prices from Investor.com .
+│   ├── raw/ <- In here i put the raw data, for wheat prices locally which can be found here (https://agridata.ec.europa.eu/extensions/DashboardPrice/DashboardMarketPrices.html#), and closet rolling future MATIF prices from Investing.com .
 │   └── processed/ <- All processed data got saved here
 ├── src/
 │   ├── forecasted_input/ <- I used this to handle the data, allign it, but also retrive flow data from API's
